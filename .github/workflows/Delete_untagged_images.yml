@@ -14,7 +14,37 @@ jobs:
   delete-untagged:
     runs-on: ubuntu-latest
     steps:
+      - name: Check whether GHCR cleanup should run
+        id: ghcr
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          OWNER: ${{ github.repository_owner }}
+          PACKAGE: xhs-downloader
+        run: |
+          if [ -z "${GH_TOKEN}" ]; then
+            echo "GITHUB_TOKEN unavailable; skipping GHCR cleanup."
+            echo "skip=true" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+
+          if gh api "users/${OWNER}/packages/container/${PACKAGE}" >/dev/null 2>&1; then
+            echo "Found GHCR package ${PACKAGE}; proceeding with cleanup."
+            echo "skip=false" >> "$GITHUB_OUTPUT"
+          else
+            echo "No GHCR package '${PACKAGE}' for ${OWNER}, or it is not readable; skipping cleanup."
+            echo "skip=true" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Login to GitHub Container Registry
+        if: steps.ghcr.outputs.skip != 'true'
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
       - name: Delete all containers from package without tags
+        if: steps.ghcr.outputs.skip != 'true'
         uses: Chizkiyahu/delete-untagged-ghcr-action@v6
         with:
           token: ${{ secrets.GITHUB_TOKEN }}

@@ -104,7 +104,6 @@ class Manager:
             },
             cookies=self.cookie_str_to_dict(cookie),
             timeout=timeout,
-            verify=False,
             http2=True,
             follow_redirects=True,
             mounts={
@@ -115,7 +114,6 @@ class Manager:
         self.download_client = AsyncClient(
             headers=self.blank_headers,
             timeout=timeout,
-            verify=False,
             follow_redirects=True,
             mounts={
                 "http://": AsyncHTTPTransport(proxy=self.proxy),

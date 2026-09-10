@@ -143,7 +143,7 @@ class XHS:
         language="zh_CN",
         # read_cookie: int | str = None,
         script_server: bool = False,
-        script_host="0.0.0.0",
+        script_host="127.0.0.1",
         script_port=5558,
         **kwargs,
     ):
@@ -695,7 +695,7 @@ class XHS:
 
     async def run_api_server(
         self,
-        host="0.0.0.0",
+        host="127.0.0.1",
         port=5556,
         log_level="info",
     ):
@@ -737,8 +737,6 @@ class XHS:
                 - **url**: 小红书作品链接，自动提取，不支持多链接；必需参数
                 - **download**: 是否下载作品文件；设置为 true 将会耗费更多时间；可选参数
                 - **index**: 下载指定序号的图片文件，仅对图文作品生效；download 参数设置为 false 时不生效；可选参数
-                - **cookie**: 请求数据时使用的 Cookie；可选参数
-                - **proxy**: 请求数据时使用的代理；可选参数
                 - **skip**: 是否跳过存在下载记录的作品；设置为 true 将不会返回存在下载记录的作品数据；可选参数
                 """)
             ),
@@ -758,8 +756,6 @@ class XHS:
                     extract.download,
                     extract.index,
                     not extract.skip,
-                    extract.cookie,
-                    extract.proxy,
                 ):
                     msg = _("获取小红书作品数据成功")
                 else:
@@ -769,7 +765,7 @@ class XHS:
     async def run_mcp_server(
         self,
         transport="streamable-http",
-        host="0.0.0.0",
+        host="127.0.0.1",
         port=5556,
         log_level="INFO",
     ):
@@ -952,7 +948,7 @@ class XHS:
 
     def init_script_server(
         self,
-        host="0.0.0.0",
+        host="127.0.0.1",
         port=5558,
     ):
         if self.manager.script_server:
@@ -960,7 +956,7 @@ class XHS:
 
     async def switch_script_server(
         self,
-        host="0.0.0.0",
+        host="127.0.0.1",
         port=5558,
         switch: bool = None,
     ):
@@ -976,7 +972,7 @@ class XHS:
 
     def run_script_server(
         self,
-        host="0.0.0.0",
+        host="127.0.0.1",
         port=5558,
     ):
         if not self.script:
@@ -984,7 +980,7 @@ class XHS:
 
     async def _run_script_server(
         self,
-        host="0.0.0.0",
+        host="127.0.0.1",
         port=5558,
     ):
         async with ScriptServer(self, host, port):

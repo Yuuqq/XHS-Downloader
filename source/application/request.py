@@ -102,7 +102,6 @@ class Html:
             headers=headers,
             proxy=proxy,
             follow_redirects=True,
-            verify=False,
             timeout=self.timeout,
             **kwargs,
         )
@@ -131,7 +130,6 @@ class Html:
             headers=headers,
             proxy=proxy,
             follow_redirects=True,
-            verify=False,
             timeout=self.timeout,
             **kwargs,
         )

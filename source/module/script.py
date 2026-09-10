@@ -11,7 +11,7 @@ class ScriptServer:
     def __init__(
         self,
         core: "XHS",
-        host="0.0.0.0",
+        host="127.0.0.1",
         port=5558,
     ):
         self.core = core
@@ -22,8 +22,11 @@ class ScriptServer:
     async def handler(self, websocket):
         with suppress(ConnectionClosed):
             async for message in websocket:
-                data = loads(message)
-                await self.core.deal_script_tasks(**data)
+                payload = loads(message)
+                data = payload.get("data")
+                index = payload.get("index")
+                if data is not None:
+                    await self.core.deal_script_tasks(data, index)
 
     async def start(self):
         """启动服务器"""

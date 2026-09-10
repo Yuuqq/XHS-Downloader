@@ -1,3 +1,4 @@
+import asyncio
 from asyncio import Semaphore, gather
 from pathlib import Path
 from typing import TYPE_CHECKING, Any
@@ -238,7 +239,8 @@ class Download:
                     # suffix,
                     format_,
                 )
-                self.manager.move(
+                await asyncio.to_thread(
+                    self.manager.move,
                     temp,
                     real,
                     mtime,
@@ -247,6 +249,16 @@ class Download:
                 # self.__create_progress(bar, None)
                 logging(self.print, _("文件 {0} 下载成功").format(real.name))
                 return True
+            except OSError as error:
+                logging(
+                    self.print,
+                    _("磁盘异常，{0} 下载失败，错误信息: {1}").format(
+                        name, repr(error)
+                    ),
+                    ERROR,
+                )
+                self.manager.delete(temp)
+                return False
             except HTTPError as error:
                 # self.__create_progress(bar, None)
                 logging(

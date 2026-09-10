@@ -49,7 +49,6 @@ class UserPosted:
                 headers=headers,
                 proxy=self.proxy,
                 follow_redirects=True,
-                verify=False,
                 timeout=self.timeout,
             )
         else:
